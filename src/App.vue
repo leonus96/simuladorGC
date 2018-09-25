@@ -1,29 +1,55 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+    <nav class="nav">
+      <div class="nav__container">
+        <div class="nav__brand">
+          <img src="">
+        </div>
+        <ul class="nav__menu" id="nav">
+          <li><router-link to="/" class="nav__menu-item">Inicio</router-link></li>
+          <li><router-link to="/exam" class="nav__menu-item">Examen</router-link></li>
+        </ul>
+      </div>      
+    </nav>    
     <router-view/>
   </div>
 </template>
 
 <style lang="scss">
+@import 'styles.scss';
+:root{
+  --primary-color: #FFA000;
+  --accent-color: #FF5252;
+}
+*{
+  box-sizing: border-box;
+}
+
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
 }
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+.nav {
+  background: var(--primary-color);
+  color: white;
+  &__container{
+    @include edContainer;
+    @include mainJustify;
+    flex-direction: row;
+  }
+  &__menu{    
+    @include edMenu(l,navBar);
+    width: 20%;
+  }
+  &__menu-item{
+    text-decoration: none;
+    padding: 15px;
+    &:hover{
+      color: var(--accent-color);
+    }    
   }
 }
 </style>
