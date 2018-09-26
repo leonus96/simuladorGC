@@ -4,12 +4,12 @@
       <h1 class="page-title">Simulador Grupo Car</h1>
       <p class="home__text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora incidunt, natus dolorem hic soluta reprehenderit ratione dolor? Maiores necessitatibus expedita neque, accusamus optio possimus pariatur harum alias nulla, voluptas unde.</p>
       <div class="home__modes">
-        <a href="" class="home__mode">AI</a>
-        <a href="" class="home__mode">AIIa</a>
-        <a href="" class="home__mode">AIIb</a>
-        <a href="" class="home__mode">AIIIa</a>
-        <a href="" class="home__mode">AIIIb</a>
-        <a href="" class="home__mode">AIIIc</a>
+        <button class="home__mode" @click="startExam('ai')">AI</button>
+        <button class="home__mode" @click="startExam('aiia')">AIIa</button>
+        <button class="home__mode" @click="startExam('aiib')">AIIb</button>
+        <button class="home__mode" @click="startExam('aiiia')">AIIIa</button>
+        <button class="home__mode" @click="startExam('aiiib')">AIIIb</button>
+        <button class="home__mode" @click="startExam('aiiic')">AIIIc</button>
       </div>      
     </div>
     
@@ -17,9 +17,17 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 export default {
   name: "home",
-  components: {}
+  components: {},
+  methods: {
+    ...mapMutations(['MUTATE_CATEGORY']),
+    startExam: function(category) {
+      this.$store.commit('MUTATE_CATEGORY', category);
+      this.$router.push( {name: 'exam'});
+    }
+  }
 };
 </script>
 

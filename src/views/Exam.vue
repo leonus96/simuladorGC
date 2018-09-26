@@ -5,7 +5,7 @@
       <h2 class="exam__title">Evaluación de conocimientos en la conducción para postulantes
 a licencias de conducir de clase AI(Vehículos de la categoría M1, M2 y N1)</h2>
       <div class="question">
-        <p class="question__theme" v-text="questions[count].theme"></p>
+        <!--<p class="question__theme" v-text="questions[count].theme"></p>-->
         <p class="question__statement">{{count+1}}) {{questions[count].statement}}</p>
         <img src="" alt="" srcset="" class="question__img" v-if="questions[count].image !=''">
         <div class="question__option">
@@ -43,17 +43,17 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["questions"]),
+    ...mapGetters(['questions']),
     btnText: function() {
       return this.count == 5 ? "Finalizar" : "Siguiente";
     }
   },
   created() {
-    this.fetchQGenerales();
+    this.fetchQuestions();
   },
   methods: {
     ...mapMutations(['ADD_DEVELOPMENT']),
-    ...mapActions(["fetchQGenerales"]),
+    ...mapActions(['fetchQuestions']),
     check() {
       let item = {};
       item.response = this.picked;

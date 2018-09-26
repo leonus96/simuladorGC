@@ -11,6 +11,7 @@ const database = firebase.database();
 
 export default new Vuex.Store({
   state: {
+    category: '',
     questions: [],
     development: [],
     score: 0
@@ -24,17 +25,39 @@ export default new Vuex.Store({
     },
     INCREMENT_SCORE: (state) => {
       state.score++;
+    },
+    MUTATE_CATEGORY: (state, category) => {
+      state.category = category;
     }
   },
-  actions: {
-    fetchQGenerales: context => {
-      const randomIndex = randomN(199, 20);
+  actions: {    
+    fetchQuestions: ({commit, getters}) => {
+      let randomGen = [];
+      let randomCat = [];
+      //console.log(getters.category);
+      if(getters.category == 'ai')
+        randomGen = randomN(199, 40);
+      else 
+        randomGen = randomN(199, 20);      
+      switch(getters.category) {
+        case 'aiia': randomCat = randomN(22, 20);break;
+        case 'aiib': randomCat = randomN(69, 20);break;
+        case 'aiiia': randomCat = randomN(71, 20);break;
+        case 'aiiib': randomCat = randomN(70, 20);break;
+        case 'aiiic': randomCat = randomN(138, 20);break;
+      }
       
-      randomIndex.map(index => {
+      randomGen.map(index => {
         database.ref(`/generales/${index}`).once('value').then(snapshot => {
-          context.commit('ADD_QUESTION', snapshot.val());
+          commit('ADD_QUESTION', snapshot.val());
         })
-      });      
+      });
+      
+      randomCat.map(index => {
+        database.ref(`/${getters.category}/${index}`).once('value').then(snapshot => {
+          commit('ADD_QUESTION', snapshot.val());
+        })
+      });
     }
   },
   getters: {
@@ -46,6 +69,9 @@ export default new Vuex.Store({
     },
     score(state){
       return state.score;
+    },
+    category(state){
+      return state.category;
     }
   }
 });
