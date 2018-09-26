@@ -21,7 +21,7 @@ a licencias de conducir de clase AI(Vehículos de la categoría M1, M2 y N1)</h2
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapActions } from 'vuex';
 import chronometer from "../components/chronometer";
 export default {
   components: {
@@ -33,12 +33,12 @@ export default {
       picked: ""
     };
   },
+  created(){
+    this.fetchQGenerales();
+  },  
   methods: {
-    fetchQuestions() {
-      this.store.dispatch('fetchQuestions');
-    }
-  },
-  computed: mapState()
+    ...mapActions([ 'fetchQGenerales' ])
+  }  
 };
 </script>
 

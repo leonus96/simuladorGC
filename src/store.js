@@ -1,6 +1,10 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import firebase from 'firebase';
+import * as firebase from 'firebase'
+import firebaseConfig from './config/firebase'
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig.config);
 
 Vue.use(Vuex)
 const database = firebase.database();
@@ -9,27 +13,27 @@ export default new Vuex.Store({
   state: {
     questions: []
   },
-
   mutations: {
-    [GET_QUESTIONS](state, questions) {
-      state.questions = questions;
+    ADD_QUESTION: (state, question) => {
+      state.questions.push(question);
     }
   },
-
   actions: {
-    fetchQuestions(context) {
-      let questions = [];
+    fetchQGenerales: context => {
+     // let questions = [];
       const randomIndex = randomN(199, 20);
-
-      var ref = database.ref('/generales/');
-
+      
       randomIndex.map(index => {
-        ref.limitToFirst(index).limitToLast(1).once('value').then(snapshoot => {
-          questions.push(snapshoot.val());
-        });
+        database.ref(`/generales/${index}`).once('value').then(snapshot => {
+          context.commit('ADD_QUESTION', snapshot.val());
+        })
       });
-
-      context.commit(FETCH_QUESTIONS, questions);
+      
+    }
+  },
+  getters: {
+    questions(state) {
+      return state.questions;
     }
   }
 });

@@ -1,0 +1,9 @@
+{
+    "config": {
+        "apiKey": "AIzaSyD6WOuieDzcNIDL8XfmB2FrZSdFYL2XvKk",
+        "authDomain": "simuladorgc.firebaseapp.com",
+        "databaseURL": "https://simuladorgc.firebaseio.com",
+        "projectId": "simuladorgc",
+        "storageBucket": "simuladorgc.appspot.com",
+        "messagingSenderId": "491152791621"
+    }}
