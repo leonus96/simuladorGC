@@ -10,23 +10,27 @@ a licencias de conducir de clase AI(Vehículos de la categoría M1, M2 y N1)</h2
         <img src="" alt="" srcset="" class="question__img" v-if="questions[count].image !=''">
         <div class="question__option">
           <input type="radio" id="a" value="a" v-model="picked" class="question__radio">
-          <label for="a" class="question__label">a) {{questions[count].alternatives.a}}</label>
+          <label for="a" class="question__label">a) {{questions[count].alternatives.a}}</label>    
+        </div>
+        <div class="question__option">
           <input type="radio" id="b" value="b" v-model="picked" class="question__radio">
           <label for="b" class="question__label">b) {{questions[count].alternatives.b}}</label>
+        </div>
+        <div class="question__option">
           <input type="radio" id="c" value="c" v-model="picked" class="question__radio">
           <label for="c" class="question__label">c) {{questions[count].alternatives.c}}</label>
+        </div>
+        <div class="question__option">
           <input type="radio" id="d" value="d" v-model="picked" class="question__radio">
-          <label for="d" class="question__label">d) {{questions[count].alternatives.d}}</label> 
-        </div>         
-
-      </div>
-      <button class="exam__button" @click="check">Siguiente</button>
+          <label for="d" class="question__label">d) {{questions[count].alternatives.d}}</label> </div>     
+        </div>
+      <button class="exam__button" @click="check" v-text="btnText"></button>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions, mapMutations } from "vuex";
 import chronometer from "../components/chronometer";
 export default {
   components: {
@@ -36,26 +40,34 @@ export default {
     return {
       picked: "",
       count: 0,
-      development: []
     };
   },
   computed: {
-    ...mapGetters(['questions'])
+    ...mapGetters(["questions"]),
+    btnText: function() {
+      return this.count == 5 ? "Finalizar" : "Siguiente";
+    }
   },
-  created(){
+  created() {
     this.fetchQGenerales();
-  },  
+  },
   methods: {
-    ...mapActions([ 'fetchQGenerales' ]),
-    check(){
+    ...mapMutations(['ADD_DEVELOPMENT']),
+    ...mapActions(["fetchQGenerales"]),
+    check() {
       let item = {};
       item.response = this.picked;
       item.correct = this.questions[this.count].response;
-      this.development.push(item);
+      if(item.response == item.correct)
+        this.$store.commit('INCREMENT_SCORE');
+      this.$store.commit('ADD_DEVELOPMENT', item);
       this.count++;
       this.picked = "";
+      if(this.count == 5){
+        this.$router.push('results');
+      }
     }
-  }  
+  }
 };
 </script>
 

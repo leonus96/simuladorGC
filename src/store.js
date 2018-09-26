@@ -11,16 +11,23 @@ const database = firebase.database();
 
 export default new Vuex.Store({
   state: {
-    questions: []
+    questions: [],
+    development: [],
+    score: 0
   },
   mutations: {
     ADD_QUESTION: (state, question) => {
       state.questions.push(question);
+    },
+    ADD_DEVELOPMENT: (state, development) => {
+      state.development.push(development);
+    },
+    INCREMENT_SCORE: (state) => {
+      state.score++;
     }
   },
   actions: {
     fetchQGenerales: context => {
-     // let questions = [];
       const randomIndex = randomN(199, 20);
       
       randomIndex.map(index => {
@@ -33,6 +40,12 @@ export default new Vuex.Store({
   getters: {
     questions(state) {
       return state.questions;
+    },
+    development(state){
+      return state.development;
+    },
+    score(state){
+      return state.score;
     }
   }
 });
