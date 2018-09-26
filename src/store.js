@@ -27,8 +27,7 @@ export default new Vuex.Store({
         database.ref(`/generales/${index}`).once('value').then(snapshot => {
           context.commit('ADD_QUESTION', snapshot.val());
         })
-      });
-      
+      });      
     }
   },
   getters: {

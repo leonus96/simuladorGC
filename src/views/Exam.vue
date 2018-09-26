@@ -5,23 +5,28 @@
       <h2 class="exam__title">Evaluación de conocimientos en la conducción para postulantes
 a licencias de conducir de clase AI(Vehículos de la categoría M1, M2 y N1)</h2>
       <div class="question">
-        <p class="question__theme">Tema: Reglamento de Tránsito y Manual de Dispositivos de Control de Tránsito</p>
-        <p class="question__statement"> 1) Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi, voluptatem ut. Tempora temporibus quas.</p>
-        <img src="" alt="" srcset="" class="question__img">
-
+        <p class="question__theme" v-text="questions[count].theme"></p>
+        <p class="question__statement">{{count+1}}) {{questions[count].statement}}</p>
+        <img src="" alt="" srcset="" class="question__img" v-if="questions[count].image !=''">
         <div class="question__option">
           <input type="radio" id="a" value="a" v-model="picked" class="question__radio">
-          <label for="a" class="question__label">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi, voluptatem ut. Tempora temporibus quas.</label>  
+          <label for="a" class="question__label">a) {{questions[count].alternatives.a}}</label>
+          <input type="radio" id="b" value="b" v-model="picked" class="question__radio">
+          <label for="b" class="question__label">b) {{questions[count].alternatives.b}}</label>
+          <input type="radio" id="c" value="c" v-model="picked" class="question__radio">
+          <label for="c" class="question__label">c) {{questions[count].alternatives.c}}</label>
+          <input type="radio" id="d" value="d" v-model="picked" class="question__radio">
+          <label for="d" class="question__label">d) {{questions[count].alternatives.d}}</label> 
         </div>         
 
       </div>
-      <button class="exam__button">Siguiente</button>
+      <button class="exam__button" @click="check">Siguiente</button>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import chronometer from "../components/chronometer";
 export default {
   components: {
@@ -29,15 +34,27 @@ export default {
   },
   data: function() {
     return {
-      score: 0,
-      picked: ""
+      picked: "",
+      count: 0,
+      development: []
     };
+  },
+  computed: {
+    ...mapGetters(['questions'])
   },
   created(){
     this.fetchQGenerales();
   },  
   methods: {
-    ...mapActions([ 'fetchQGenerales' ])
+    ...mapActions([ 'fetchQGenerales' ]),
+    check(){
+      let item = {};
+      item.response = this.picked;
+      item.correct = this.questions[this.count].response;
+      this.development.push(item);
+      this.count++;
+      this.picked = "";
+    }
   }  
 };
 </script>
