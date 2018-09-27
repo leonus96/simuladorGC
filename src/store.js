@@ -8,13 +8,15 @@ firebase.initializeApp(firebaseConfig.config);
 
 Vue.use(Vuex)
 const database = firebase.database();
+const storage = firebase.storage();
 
 export default new Vuex.Store({
   state: {
     category: '',
     questions: [],
     development: [],
-    score: 0
+    score: 0,
+    currentImage: ''
   },
   mutations: {
     ADD_QUESTION: (state, question) => {
@@ -28,6 +30,9 @@ export default new Vuex.Store({
     },
     MUTATE_CATEGORY: (state, category) => {
       state.category = category;
+    },
+    MUTATE_CURRENT_IMAGE: (state, image) => {
+      state.currentImage = image;
     }
   },
   actions: {    
@@ -37,27 +42,33 @@ export default new Vuex.Store({
       //console.log(getters.category);
       if(getters.category == 'ai')
         randomGen = randomN(199, 40);
-      else 
+      else {
         randomGen = randomN(199, 20);      
-      switch(getters.category) {
-        case 'aiia': randomCat = randomN(22, 20);break;
-        case 'aiib': randomCat = randomN(69, 20);break;
-        case 'aiiia': randomCat = randomN(71, 20);break;
-        case 'aiiib': randomCat = randomN(70, 20);break;
-        case 'aiiic': randomCat = randomN(138, 20);break;
+        switch(getters.category) {
+          case 'aiia': randomCat = randomN(22, 20);break;
+          case 'aiib': randomCat = randomN(69, 20);break;
+          case 'aiiia': randomCat = randomN(71, 20);break;
+          case 'aiiib': randomCat = randomN(70, 20);break;
+          case 'aiiic': randomCat = randomN(138, 20);break;
+        }
+        randomCat.map(index => {
+          database.ref(`/${getters.category}/${index}`).once('value').then(snapshot => {
+            commit('ADD_QUESTION', snapshot.val());
+          })
+        });
       }
-      
       randomGen.map(index => {
         database.ref(`/generales/${index}`).once('value').then(snapshot => {
           commit('ADD_QUESTION', snapshot.val());
         })
       });
       
-      randomCat.map(index => {
-        database.ref(`/${getters.category}/${index}`).once('value').then(snapshot => {
-          commit('ADD_QUESTION', snapshot.val());
-        })
-      });
+      
+    },
+    fetchCurrentImage: ({commit}, route) => {
+      storage.ref(route).getDownloadURL().then(function(url){
+        commit('MUTATE_CURRENT_IMAGE', url);
+      });      
     }
   },
   getters: {
@@ -72,6 +83,9 @@ export default new Vuex.Store({
     },
     category(state){
       return state.category;
+    },
+    imageURL(state){
+      return state.currentImage;
     }
   }
 });

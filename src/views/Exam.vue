@@ -7,7 +7,7 @@ a licencias de conducir de clase AI(Vehículos de la categoría M1, M2 y N1)</h2
       <div class="question">
         <!--<p class="question__theme" v-text="questions[count].theme"></p>-->
         <p class="question__statement">{{count+1}}) {{questions[count].statement}}</p>
-        <img src="" alt="" srcset="" class="question__img" v-if="questions[count].image !=''">
+        <img v-if="questions[count].image != ''" :src="imageURL" alt="" srcset="" class="question__img">
         <div class="question__option">
           <input type="radio" id="a" value="a" v-model="picked" class="question__radio">
           <label for="a" class="question__label">a) {{questions[count].alternatives.a}}</label>    
@@ -43,17 +43,19 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['questions']),
+    ...mapGetters(['questions', 'imageURL']),
     btnText: function() {
-      return this.count == 5 ? "Finalizar" : "Siguiente";
+      return this.count == 39 ? "Finalizar" : "Siguiente";
     }
   },
   created() {
     this.fetchQuestions();
+    this.checkImage();
+
   },
   methods: {
     ...mapMutations(['ADD_DEVELOPMENT']),
-    ...mapActions(['fetchQuestions']),
+    ...mapActions(['fetchQuestions', 'fetchCurrentImage']),
     check() {
       let item = {};
       item.response = this.picked;
@@ -63,8 +65,14 @@ export default {
       this.$store.commit('ADD_DEVELOPMENT', item);
       this.count++;
       this.picked = "";
-      if(this.count == 5){
+      this.checkImage();
+      if(this.count == 39){
         this.$router.push('results');
+      }
+    },
+    checkImage(){
+      if(this.questions[this.count].image != ''){
+        this.fetchCurrentImage(this.questions[this.count].image);
       }
     }
   }
