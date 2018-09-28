@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import * as firebase from 'firebase'
+import * as firebase from 'firebase/app'
+import 'firebase/database'
 import firebaseConfig from './config/firebase'
 
 // Initialize Firebase
@@ -8,7 +9,13 @@ firebase.initializeApp(firebaseConfig.config);
 
 Vue.use(Vuex)
 const database = firebase.database();
-const storage = firebase.storage();
+
+const initialState = {
+  category: '',
+  questions: [],
+  development: [],
+  score: 0
+}
 
 export default new Vuex.Store({
   state: {
@@ -16,7 +23,6 @@ export default new Vuex.Store({
     questions: [],
     development: [],
     score: 0,
-    currentImage: ''
   },
   mutations: {
     ADD_QUESTION: (state, question) => {
@@ -31,25 +37,33 @@ export default new Vuex.Store({
     MUTATE_CATEGORY: (state, category) => {
       state.category = category;
     },
-    MUTATE_CURRENT_IMAGE: (state, image) => {
-      state.currentImage = image;
+    RESET_STATE: (state) => {
+      let newState = {};
+
+      Object.keys(state).forEach(key => {
+        newState[key] = initialState[key]; // or = initialState[key]
+      });
+      newState.questions.length = 0;
+      newState.development.length = 0;
+
+      Object.assign(state, newState);
     }
   },
-  actions: {    
-    fetchQuestions: ({commit, getters}) => {
+  actions: {
+    fetchQuestions: ({ commit, getters }) => {
       let randomGen = [];
       let randomCat = [];
       //console.log(getters.category);
-      if(getters.category == 'ai')
+      if (getters.category == 'ai')
         randomGen = randomN(199, 40);
       else {
-        randomGen = randomN(199, 20);      
-        switch(getters.category) {
-          case 'aiia': randomCat = randomN(22, 20);break;
-          case 'aiib': randomCat = randomN(69, 20);break;
-          case 'aiiia': randomCat = randomN(71, 20);break;
-          case 'aiiib': randomCat = randomN(70, 20);break;
-          case 'aiiic': randomCat = randomN(138, 20);break;
+        randomGen = randomN(199, 20);
+        switch (getters.category) {
+          case 'aiia': randomCat = randomN(22, 20); break;
+          case 'aiib': randomCat = randomN(69, 20); break;
+          case 'aiiia': randomCat = randomN(71, 20); break;
+          case 'aiiib': randomCat = randomN(70, 20); break;
+          case 'aiiic': randomCat = randomN(138, 20); break;
         }
         randomCat.map(index => {
           database.ref(`/${getters.category}/${index}`).once('value').then(snapshot => {
@@ -62,30 +76,22 @@ export default new Vuex.Store({
           commit('ADD_QUESTION', snapshot.val());
         })
       });
-      
-      
-    },
-    fetchCurrentImage: ({commit}, route) => {
-      storage.ref(route).getDownloadURL().then(function(url){
-        commit('MUTATE_CURRENT_IMAGE', url);
-      });      
+
+
     }
   },
   getters: {
     questions(state) {
       return state.questions;
     },
-    development(state){
+    development(state) {
       return state.development;
     },
-    score(state){
+    score(state) {
       return state.score;
     },
-    category(state){
+    category(state) {
       return state.category;
-    },
-    imageURL(state){
-      return state.currentImage;
     }
   }
 });

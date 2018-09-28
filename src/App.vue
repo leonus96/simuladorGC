@@ -2,9 +2,9 @@
   <div id="app">
     <nav class="nav">
       <div class="nav__container">
-        <div class="nav__brand">
-          <img src="">
-        </div>
+        <a class="nav__brand">
+          <img src="./assets/logo.png" alt="" srcset="">
+        </a>
         <ul class="nav__menu" id="nav">
           <li><router-link to="/" class="nav__menu-item">Inicio</router-link></li>
           <li><router-link to="/exam" class="nav__menu-item">Examen</router-link></li>
@@ -39,6 +39,14 @@
     @include edContainer;
     @include mainJustify;
     flex-direction: row;
+  }
+  &__brand{
+    padding: 10px 0 10px 0;
+    img{
+      max-height: 100px;
+      width: auto;
+      display: block;
+    }
   }
   &__menu{    
     @include edMenu(l,navBar);

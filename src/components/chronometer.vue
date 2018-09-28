@@ -23,16 +23,19 @@ export default {
   },
   methods: {
     inicio() {
-        if(this.seconds > 0){
-            this.seconds--;
+      if (this.seconds > 0) {
+        this.seconds--;
+        if (this.minutes == 0 && this.seconds == 0) {
+          this.fin();
         }
-        if(this.seconds == 0){
-            this.minutes--;
-            this.seconds = 60;
-        }
-        if(this.minutes == 0){
-            alert('tiempo!');
-        }
+      }
+      if (this.seconds == 0) {
+        this.minutes--;
+        this.seconds = 60;
+      }
+    },
+    fin() {
+      this.$emit("chronometer:time");
     }
   }
 };
@@ -41,12 +44,17 @@ export default {
 <style lang="scss">
 @import "../styles.scss";
 .chronometer {
-  @include edContainer;
-  @include mainCenter;
+  &__container {
+    @include edContainer;
+    @include mainCenter;
+  }
+  background: gray;
+  color: white;
+  font-weight: bold;
   padding: 15px 0;
-  &__text{
-      font-size: 30px;
-      margin: 0;
+  &__text {
+    font-size: 30px;
+    margin: 0;
   }
 }
 </style>

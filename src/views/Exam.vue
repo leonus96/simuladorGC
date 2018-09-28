@@ -1,13 +1,16 @@
 <template>
   <div class="exam">
-    <chronometer></chronometer>
+    <chronometer @chronometer:time="timeDown"></chronometer>
     <div class="exam__container">
       <h2 class="exam__title">Evaluación de conocimientos en la conducción para postulantes
-a licencias de conducir de clase AI(Vehículos de la categoría M1, M2 y N1)</h2>
+a licencias de conducir de clase {{category.toUpperCase()}}</h2>
       <div class="question">
+        <div class="question__container card">        
         <!--<p class="question__theme" v-text="questions[count].theme"></p>-->
         <p class="question__statement">{{count+1}}) {{questions[count].statement}}</p>
-        <img v-if="questions[count].image != ''" :src="imageURL" alt="" srcset="" class="question__img">
+        <div class="question__image">
+          <img v-if="questions[count].image != ''" :src="require(`@/assets${questions[count].image}`)" alt="" srcset="">  
+        </div>
         <div class="question__option">
           <input type="radio" id="a" value="a" v-model="picked" class="question__radio">
           <label for="a" class="question__label">a) {{questions[count].alternatives.a}}</label>    
@@ -22,9 +25,13 @@ a licencias de conducir de clase AI(Vehículos de la categoría M1, M2 y N1)</h2
         </div>
         <div class="question__option">
           <input type="radio" id="d" value="d" v-model="picked" class="question__radio">
-          <label for="d" class="question__label">d) {{questions[count].alternatives.d}}</label> </div>     
+          <label for="d" class="question__label">d) {{questions[count].alternatives.d}}</label> 
         </div>
-      <button class="exam__button" @click="check" v-text="btnText"></button>
+        <div class="question__options">
+          <button class="exam__button btn" @click="check" v-text="btnText"></button>
+        </div>        
+      </div>
+    </div>
     </div>
   </div>
 </template>
@@ -39,41 +46,35 @@ export default {
   data: function() {
     return {
       picked: "",
-      count: 0,
+      count: 0
     };
   },
   computed: {
-    ...mapGetters(['questions', 'imageURL']),
+    ...mapGetters(["questions", "category"]),
     btnText: function() {
       return this.count == 39 ? "Finalizar" : "Siguiente";
     }
   },
   created() {
     this.fetchQuestions();
-    this.checkImage();
-
   },
   methods: {
-    ...mapMutations(['ADD_DEVELOPMENT']),
-    ...mapActions(['fetchQuestions', 'fetchCurrentImage']),
+    ...mapMutations(["ADD_DEVELOPMENT"]),
+    ...mapActions(["fetchQuestions", "fetchCurrentImage"]),
     check() {
       let item = {};
       item.response = this.picked;
       item.correct = this.questions[this.count].response;
-      if(item.response == item.correct)
-        this.$store.commit('INCREMENT_SCORE');
-      this.$store.commit('ADD_DEVELOPMENT', item);
+      if (item.response == item.correct) this.$store.commit("INCREMENT_SCORE");
+      this.$store.commit("ADD_DEVELOPMENT", item);
       this.count++;
       this.picked = "";
-      this.checkImage();
-      if(this.count == 39){
-        this.$router.push('results');
+      if (this.count == 39) {
+        this.$router.push("results");
       }
     },
-    checkImage(){
-      if(this.questions[this.count].image != ''){
-        this.fetchCurrentImage(this.questions[this.count].image);
-      }
+    timeDown(){
+      this.$router.push("results");
     }
   }
 };
@@ -87,27 +88,30 @@ export default {
     @include mainCenter;
     text-align: left;
   }
-  &__button {
-    padding: 15px;
-    background: var(--primary-color);
-    padding: 15px;
-    border-radius: 5px;
-    margin: 10px 10px;
-    box-shadow: 0 5px #888888;
+  
+  &__title {
+    text-align: center;
+    display: block;
   }
 }
 .question {
   @include edContainer;
-  background: white;
-  padding: 15px;
-  border: 1px solid lightgray;
-  border-radius: 4px;
   margin-bottom: 30px;
+  padding: 0 15px;
+  &__container {
+    @include edItem(100);
+  }
   &__theme {
     @include edItem(100);
     font-weight: 700;
     margin-bottom: 30px;
     padding: 0;
+  }
+  &__image{
+    @include edItem(100);
+    text-align: center;
+    img{
+    }
   }
   &__statement {
     @include edItem(100);
@@ -118,6 +122,11 @@ export default {
   &__option {
     @include edItem(100);
     text-align: left;
+  }
+  &__options {
+    @include edItem(100);
+    @include edContainer;
+    @include mainCenter;
   }
 }
 </style>

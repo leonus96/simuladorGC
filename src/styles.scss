@@ -4,5 +4,51 @@ a {
     text-decoration: none;
     text-transform: uppercase;
     font-weight: 700;
-
   }
+
+
+  body{
+    background: rgb(250, 253, 255);
+  }
+  .card {
+  background: white;
+  padding: 30px 15px;
+  border: 1px solid lightgray;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  }
+  .btn{
+    background: var(--primary-color);
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 8px rgb(196, 127, 9);
+    color: white;
+    font-weight: 700;
+    transition: all 0.5s ease;
+    &:hover{
+      background: rgb(255, 188, 63);
+    }
+    &--red{
+      background: var(--accent-color);
+      box-shadow: 0 8px rgb(175, 0, 0);
+      &:hover{
+        background: rgb(255, 126, 126)
+      }
+    }
+    &--green{
+      background: rgb(0, 182, 45);
+      box-shadow: 0 8px rgb(3, 114, 31);
+      &:hover{
+        background: rgb(112, 245, 145);
+      }
+    }
+    &--desactivate{
+      cursor: not-allowed;
+    }
+  }
+  .page-title{
+    @include edItem(100);
+    text-align: center;
+    margin: 18px 0;
+  }
+

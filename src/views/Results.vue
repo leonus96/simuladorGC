@@ -1,12 +1,13 @@
 <template>
     <div class="results">
-        <div class="results__container">
+        <h2 class="">RESULTADOS</h2>
+        <div class="results__container card">
             <div class="results__score">{{score}} pts</div>
             <div class="results__statistics">
             </div>
             <div class="results__buttons">
-                <button class="exam__button">Revisar</button>
-                <button class="exam__button">Otro Intento</button>
+                <a href="#" class="results__button btn btn--red btn--desactivate">Revisar</a>
+                <router-link to="/" class="results__button btn btn--green">Otro Intento</router-link>
             </div>
         </div>
     </div>
@@ -30,11 +31,24 @@ export default {
   }
   &__score {
     @include edItem(100);
-    font-size: 50px;
-    padding: 15px 0;
+    font-size: 70px;
+    margin-bottom: 30px;
   }
   &__statistics {
     @include edItem(100);
+     margin-bottom: 30px;
+  }
+  &__buttons{
+    @include edItem(100);
+    @include edContainer;
+    @include mainCenter;    
+  }
+  &__button{
+    text-decoration: none;
+    margin: 0 10px; 
+    &:hover{
+        text-decoration: none;
+    }
   }
 }
 </style>
