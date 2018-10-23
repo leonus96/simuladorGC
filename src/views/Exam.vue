@@ -33,8 +33,8 @@ a licencias de conducir de clase {{category.toUpperCase()}}</h2>
           <label v-else for="d" class="question__label">d) {{questions[count].alternatives.d}}</label> 
         </div>
         <div class="question__options">
-          <button class="exam__button btn btn--green" @click="checkQuestion">Revisar</button>
-          <button class="exam__button btn" @click="check" v-text="btnText"></button>
+          <button class="exam__button btn btn--green" :class="{'btn--desactivate': !isCheck}" @click="checkQuestion">Revisar</button>
+          <button class="exam__button btn" :class="{'btn--desactivate': !isCheck}" @click="check" v-text="btnText"></button>
         </div>        
       </div>
     </div>
@@ -63,6 +63,9 @@ export default {
     ...mapGetters(["questions", "category"]),
     btnText: function() {
       return this.count == 40 ? "Finalizar" : "Siguiente";
+    },
+    isCheck: function() {
+      return this.picked == ''? false : true;
     }
   },
   created() {
@@ -72,6 +75,7 @@ export default {
     ...mapMutations(["ADD_DEVELOPMENT"]),
     ...mapActions(["fetchQuestions", "fetchCurrentImage"]),
     check() {
+      if(!this.isCheck) return;
       let item = {};
       item.response = this.picked;
       item.correct = this.questions[this.count].response;

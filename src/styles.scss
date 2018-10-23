@@ -45,6 +45,11 @@ a, button {
     }
     &--desactivate{
       cursor: not-allowed;
+      background: gray;
+      box-shadow: 0 8px rgb(58, 58, 58);
+      &:hover{
+        background: gray;
+      }
     }
   }
   .page-title{
