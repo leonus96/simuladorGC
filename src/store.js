@@ -14,7 +14,9 @@ const initialState = {
   category: '',
   questions: [],
   development: [],
-  score: 0
+  score: 0,
+  name: '',
+  scoreHistory: [],
 }
 
 export default new Vuex.Store({
@@ -23,6 +25,8 @@ export default new Vuex.Store({
     questions: [],
     development: [],
     score: 0,
+    name: '',
+    scoreHistory: [],
   },
   mutations: {
     ADD_QUESTION: (state, question) => {
@@ -37,6 +41,17 @@ export default new Vuex.Store({
     MUTATE_CATEGORY: (state, category) => {
       state.category = category;
     },
+    MUTATE_NAME: (state, name) => {
+      state.name = name;
+    },
+    ADD_SCORE_HISTORY: (state, score) => {
+      state.scoreHistory.push(score);
+    },
+    RESET_EXAM: state => {
+      state.questions.length = 0;
+      state.development.length = 0;
+      state.score = 0;
+    },
     RESET_STATE: (state) => {
       let newState = {};
 
@@ -45,6 +60,7 @@ export default new Vuex.Store({
       });
       newState.questions.length = 0;
       newState.development.length = 0;
+      newState.scoreHistory.length = 0;
 
       Object.assign(state, newState);
     }
@@ -76,13 +92,14 @@ export default new Vuex.Store({
           commit('ADD_QUESTION', snapshot.val());
         })
       });
-
-
     }
   },
   getters: {
     questions(state) {
       return state.questions;
+    },
+    questionLength(state) {
+      return state.questions.length;
     },
     development(state) {
       return state.development;
@@ -92,6 +109,12 @@ export default new Vuex.Store({
     },
     category(state) {
       return state.category;
+    },
+    name(state) {
+      return state.name;
+    },
+    scoreHistory(state) {
+      return state.scoreHistory;
     }
   }
 });

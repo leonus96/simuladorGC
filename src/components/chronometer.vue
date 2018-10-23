@@ -1,9 +1,8 @@
 <template>
-    <div class="chronometer">
+    <div class="chronometer" v-bind:class="{'chronometer-fixed': fixed}">
         <div class="chronometer__container">
             <p class="chronometer__text">Tiempo Restante: 
-                <span v-text="minutes"></span>:
-                <span v-text="seconds"></span>
+                <span v-text="minutes"></span>:<span v-if="seconds< 10">0{{seconds}}</span> <span v-else v-text="seconds"></span>
             </p>
         </div>
     </div>
@@ -15,35 +14,49 @@ export default {
     return {
       hours: 0,
       minutes: 39,
-      seconds: 59
+      seconds: 59,
+      fixed: false,
     };
   },
   beforeMount() {
-    setInterval(this.inicio, 1000);
+    setInterval(this.init, 1000);
   },
   methods: {
-    inicio() {
-      if (this.seconds > 0) {
+    init() {
+      if (this.seconds > -1) {
         this.seconds--;
         if (this.minutes == 0 && this.seconds == 0) {
-          this.fin();
+          this.end();
         }
       }
-      if (this.seconds == 0) {
-        this.minutes--;
+      if (this.seconds == -1) {
         this.seconds = 60;
+        this.minutes--;        
       }
     },
-    fin() {
+    end() {
       this.$emit("chronometer:time");
+    },
+    handleScroll() {
+      if(window.scrollY > 95){
+        this.fixed = true;
+      } else {
+        this.fixed = false;
+      }
     }
+  },
+  created(){
+    window.addEventListener('scroll', this.handleScroll);
+  },
+  destroy() {
+    window.removeEventListener('scroll', this.handleScroll);
   }
 };
 </script>
 
 <style lang="scss">
 @import "../styles.scss";
-.chronometer {
+.chronometer {  
   &__container {
     @include edContainer;
     @include mainCenter;
@@ -56,6 +69,11 @@ export default {
     font-size: 30px;
     margin: 0;
   }
+}
+.chronometer-fixed {
+  position: fixed;
+  width: 100%;
+  top: 0;
 }
 </style>
 
